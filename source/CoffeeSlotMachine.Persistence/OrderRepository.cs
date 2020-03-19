@@ -16,17 +16,7 @@ namespace CoffeeSlotMachine.Persistence
             _dbContext = dbContext;
         }
 
-        public IEnumerable<Order> GetAllWithProduct()
-        {
-            List<Order> resultList = new List<Order>();
-
-            foreach (var order in _dbContext.Orders)
-            {
-                resultList.Add(order);
-            }
-
-            return resultList;
-        }
+        public IEnumerable<Order> GetAllWithProduct() => _dbContext.Orders.ToList();
 
         public void AddOrder(Order newOrder) => _dbContext.Orders.Add(newOrder);
     }
