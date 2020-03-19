@@ -51,12 +51,8 @@ namespace CoffeeSlotMachine.Core.Entities
         /// <summary>
         /// Summe der Cents die zurückgegeben werden
         /// </summary>
-        public int ReturnCents => CalculateReturnCents();
+        public int ReturnCents => ThrownInCents - Product.PriceInCents;
 
-        private int CalculateReturnCents()
-        {
-            return ThrownInCents - Product.PriceInCents;
-        }
 
         public int ProductId { get; set; }
 
