@@ -14,5 +14,22 @@ namespace CoffeeSlotMachine.Persistence
         {
             _dbContext = dbContext;
         }
+
+        public IEnumerable<Product> GetProducts()
+        {
+            List<Product> products = new List<Product>();
+
+            using (_dbContext)
+            {
+                foreach (var product in _dbContext.Products)
+                {
+                    products.Add(product);
+                }
+
+                _dbContext.SaveChanges();
+            }
+
+            return products.OrderBy(p => p.Name);
+        }
     }
 }

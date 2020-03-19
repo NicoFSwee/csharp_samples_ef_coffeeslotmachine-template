@@ -13,6 +13,5 @@ namespace CoffeeSlotMachine.Persistence
         {
             _dbContext = dbContext;
         }
-
     }
 }

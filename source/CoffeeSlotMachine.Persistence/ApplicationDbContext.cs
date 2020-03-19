@@ -7,7 +7,6 @@ namespace CoffeeSlotMachine.Persistence
 {
     public class ApplicationDbContext : DbContext
     {
-
         public DbSet<Order> Orders { get; set; }
         public DbSet<Product> Products { get; set; }
         public DbSet<Coin> Coins { get; set; }
