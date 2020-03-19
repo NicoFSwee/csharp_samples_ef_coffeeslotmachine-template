@@ -74,7 +74,7 @@ namespace CoffeeSlotMachine.Core.Logic
             else
             {
                 List<Coin> currentDepot;
-                string[] cents = order.ThrownInCoinValues.Split(";");
+                string[] cents = order.ThrownInCoinValues?.Split(";");
 
                 foreach (var cent in cents)
                 {
@@ -88,19 +88,7 @@ namespace CoffeeSlotMachine.Core.Logic
                     
                 currentDepot = _dbContext.Coins.ToList<Coin>();
                 order.FinishPayment(currentDepot);
-
-                string[] returnCents = order.ReturnCoinValues.Split(";");
-
-                foreach (var cent in returnCents)
-                {
-                    if (!String.IsNullOrWhiteSpace(cent))
-                    {
-                        Coin tmp = _dbContext.Coins.FirstOrDefault(c => c.CoinValue == Convert.ToInt32(cent));
-                        tmp.Amount--;
-                        _dbContext.Update(tmp);
-                    }
-                }
-
+                
                 _dbContext.SaveChanges();
                 return true;
             }

@@ -70,7 +70,6 @@ namespace CoffeeSlotMachine.Core.Entities
         [NotMapped]
         public int DonationCents { get; set; }
 
-
         /// <summary>
         /// Münze wird eingenommen.
         /// </summary>
@@ -98,44 +97,53 @@ namespace CoffeeSlotMachine.Core.Entities
         /// <param name="coins">Aktueller Zustand des Münzdepots</param>
         public void FinishPayment(IEnumerable<Coin> coins)
         {
-            Coin[] coinArray = new Coin[6];
+            List<Coin> coinsList = (List<Coin>)coins;
+            coinsList.Reverse();
 
-            foreach (var coin in coins)
+            int restMoney = ReturnCents;
+            int possibleSum = 0;
+
+            foreach (var coin in coinsList)
             {
-                coinArray[coin.Id - 1] = coin;
+                if(coin.CoinValue <= restMoney)
+                {
+                    possibleSum += coin.CoinValue * coin.Amount;
+                }
             }
 
-            int restMoney = ThrownInCents - Product.PriceInCents;
+            if(restMoney > 0 && restMoney <= possibleSum)
+            {
+                foreach (var coin in coinsList)
+                {
+                    while (restMoney >= coin.CoinValue && coin.Amount > 0)
+                    {
+                        if (coin.Amount > 0 && restMoney - coin.CoinValue >= 0)
+                        {
+                            if (String.IsNullOrEmpty(ReturnCoinValues))
+                            {
+                                ReturnCoinValues += $"{coin.CoinValue}";
+                                coin.Amount--;
+                            }
+                            else
+                            {
+                                ReturnCoinValues += $";{coin.CoinValue}";
+                                coin.Amount--;
+                            }
+
+                            restMoney -= coin.CoinValue;
+                        }
+                    }
+                }
+            }
 
             if(restMoney > 0)
             {
-                for (int i = coinArray.Length - 1; i >= 0; i--)
-                {
-                    if(restMoney - coinArray[i].CoinValue >= 0 && coinArray[i].Amount > 0)
-                    {
-                        if(String.IsNullOrEmpty(ReturnCoinValues))
-                        {
-                            ReturnCoinValues += $"{coinArray[i].CoinValue}";
-                        }
-                        else
-                        {
-                            ReturnCoinValues += $";{coinArray[i].CoinValue}";
-                        }
-                        
-                        restMoney -= coinArray[i].CoinValue;
-                    }
-                }
-
-                if(restMoney != 0)
-                {
-                    DonationCents = restMoney;
-                }
-                else
-                {
-                    DonationCents = 0;
-                }
+                DonationCents = restMoney;
+            }
+            else
+            {
+                DonationCents = 0;
             }
         }
-        
     }
 }
