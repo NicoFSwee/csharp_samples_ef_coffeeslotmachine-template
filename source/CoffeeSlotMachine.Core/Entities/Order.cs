@@ -113,21 +113,18 @@ namespace CoffeeSlotMachine.Core.Entities
                 {
                     while (restMoney >= coin.CoinValue && coin.Amount > 0)
                     {
-                        if (coin.Amount > 0 && restMoney - coin.CoinValue >= 0)
+                        if (String.IsNullOrEmpty(ReturnCoinValues))
                         {
-                            if (String.IsNullOrEmpty(ReturnCoinValues))
-                            {
-                                ReturnCoinValues += $"{coin.CoinValue}";
-                                coin.Amount--;
-                            }
-                            else
-                            {
-                                ReturnCoinValues += $";{coin.CoinValue}";
-                                coin.Amount--;
-                            }
-
-                            restMoney -= coin.CoinValue;
+                            ReturnCoinValues += $"{coin.CoinValue}";
+                            coin.Amount--;
                         }
+                        else
+                        {
+                            ReturnCoinValues += $";{coin.CoinValue}";
+                            coin.Amount--;
+                        }
+
+                        restMoney -= coin.CoinValue;
                     }
                 }
             }
